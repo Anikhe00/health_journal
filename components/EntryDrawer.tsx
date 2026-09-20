@@ -43,10 +43,10 @@ export function EntryDrawerProvider({ title, action, initial, existingImages, su
   );
 }
 
-export function OpenEntryDrawerButton({ className, children }: { className?: string; children: React.ReactNode }) {
+export function OpenEntryDrawerButton({ className, label, children }: { className?: string; label?: string; children: React.ReactNode }) {
   const openDrawer = useContext(OpenDrawerContext);
   return (
-    <button type="button" onClick={() => openDrawer?.()} className={className}>
+    <button type="button" onClick={() => openDrawer?.()} className={className} aria-label={label}>
       {children}
     </button>
   );

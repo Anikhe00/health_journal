@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
       { source: "/api/share/:path*", headers: secretLinkHeaders },
     ];
   },
+  // The PDF route reads its fonts from disk at run time, so they must be bundled with it when deployed.
+  outputFileTracingIncludes: { "/api/export/pdf": ["./lib/fonts/**"] },
   experimental: {
     // Photos added in one save total at most 4 MB (see lib/attachments.ts); web hosts cap requests at about 4.5 MB.
     serverActions: { bodySizeLimit: "5mb" },

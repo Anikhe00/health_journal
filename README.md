@@ -30,7 +30,7 @@ Useful scripts: `npm run db:studio` (browse the data), `npm run db:reset` (wipe 
 | `proxy.ts` | Redirects signed-out visitors to `/login` |
 | `app/login`, `app/signup` | Auth pages (sign-up is a server action in `app/signup/actions.ts`) |
 | `app/dashboard` | Timeline: grouped by date, tag filter, keyword search (`?tag=` and `?q=`) |
-| `app/entries` | Entry detail page and server actions (`actions.ts`); `/entries/new` and `/entries/[id]/edit` are plain-page versions of the form |
+| `app/entries` | Entry detail page and server actions (`actions.ts`) |
 | `components/EntryDrawer.tsx` | The entry form in a drawer, for both new and edit (one "new entry" drawer lives in `app/layout.tsx`) |
 | `components/Header.tsx`, `components/BottomNav.tsx` | Header with avatar and Sign out; on phones the Timeline / New entry / Passport bar sits at the bottom |
 | `app/passport` | The flippable card, PDF download, and the passport details form (in a drawer) |

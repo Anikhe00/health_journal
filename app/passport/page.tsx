@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import QRCode from "qrcode";
 import { prisma } from "@/lib/db";
+import { publicOrigin } from "@/lib/app-url";
 import { requireUserId } from "@/lib/auth";
 import { todayInputValue, toInputValue } from "@/lib/dates";
 import { parseTags, type Tag } from "@/lib/tags";
@@ -10,9 +11,6 @@ import PassportForm from "@/app/passport/PassportForm";
 import DrawerButton from "@/components/DrawerButton";
 import { DrawerProvider, OpenDrawerButton } from "@/components/DrawerProvider";
 import { ChevronRight, PencilIcon, rowClass } from "@/components/ListRows";
-
-// The web address the QR code points to. Set NEXTAUTH_URL to your real domain once the app is online.
-const publicOrigin = () => (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
 const MAX_SUGGESTIONS = 8;
 

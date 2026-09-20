@@ -48,3 +48,24 @@ export const TrashIcon = () => (
     <path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12M10 11v5M14 11v5" />
   </Svg>
 );
+
+export const ShareIcon = () => (
+  <Svg>
+    <circle cx="6" cy="12" r="2.2" />
+    <circle cx="17" cy="6" r="2.2" />
+    <circle cx="17" cy="18" r="2.2" />
+    <path d="m8 11 7-4M8 13l7 4" />
+  </Svg>
+);
+
+export const PrinterIcon = () => (
+  <Svg>
+    <path d="M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5a1 1 0 0 1-1 1h-2M7 14h10v6H7v-6Z" />
+  </Svg>
+);
+
+export const ArchiveIcon = () => (
+  <Svg>
+    <path d="M4 7h16v3H4V7ZM6 10v9h12v-9M10 14h4" />
+  </Svg>
+);

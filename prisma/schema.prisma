@@ -26,6 +26,10 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   entries   Entry[]
   passport  Passport?
+  shares    Share[]
+
+  // Raising this signs the person out everywhere: a login only counts while it carries the current number.
+  sessionVersion Int @default(0) @map("session_version")
 
   @@map("users")
 }
@@ -50,8 +54,9 @@ model Entry {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  attachments Attachment[]
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments  Attachment[]
+  shareEntries ShareEntry[]
 
   @@index([userId, date])
   @@map("entries")
@@ -88,4 +93,36 @@ model Passport {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("passports")
+}
+
+// A link the patient creates to show chosen entries to a clinician, who needs no account.
+// The link's secret is shown once when it is created. Only its SHA-256 fingerprint is stored here.
+model Share {
+  id           String    @id @default(cuid())
+  userId       String    @map("user_id")
+  tokenHash    String    @unique @map("token_hash")
+  label        String? // e.g. "Dr Bello, General Hospital"
+  expiresAt    DateTime  @map("expires_at")
+  revokedAt    DateTime? @map("revoked_at") // set when the patient turns the link off
+  viewCount    Int       @default(0) @map("view_count")
+  lastViewedAt DateTime? @map("last_viewed_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entries ShareEntry[]
+
+  @@index([userId])
+  @@map("shares")
+}
+
+// Which entries a share shows.
+model ShareEntry {
+  shareId String @map("share_id")
+  entryId String @map("entry_id")
+
+  share Share @relation(fields: [shareId], references: [id], onDelete: Cascade)
+  entry Entry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@id([shareId, entryId])
+  @@map("share_entries")
 }

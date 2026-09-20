@@ -38,3 +38,8 @@ export function formatLongDate(date: Date): string {
     timeZone: "UTC",
   });
 }
+
+// "27 Sep, 10:30"
+export function formatDateTime(date: Date, timeZone = "Africa/Lagos"): string {
+  return date.toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone });
+}

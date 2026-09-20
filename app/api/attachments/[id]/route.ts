@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { attachmentResponse } from "@/lib/attachment-response";
 import { prisma } from "@/lib/db";
-import { readStoredFile } from "@/lib/storage";
 
 // The only way to see an uploaded image. It is served only to the person who owns the entry.
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -15,19 +15,5 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   // Same answer whether it doesn't exist or belongs to someone else.
   if (!attachment) return new Response("Not found", { status: 404 });
 
-  let data: Buffer;
-  try {
-    data = await readStoredFile(attachment.id);
-  } catch {
-    return new Response("Not found", { status: 404 });
-  }
-
-  return new Response(new Uint8Array(data), {
-    headers: {
-      "Content-Type": attachment.mimeType,
-      "Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(attachment.fileName)}`,
-      "Cache-Control": "private, max-age=3600",
-      "X-Content-Type-Options": "nosniff",
-    },
-  });
+  return attachmentResponse(attachment);
 }

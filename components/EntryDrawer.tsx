@@ -37,7 +37,6 @@ export function EntryDrawerProvider({ title, action, initial, existingImages, su
           existingImages={existingImages}
           submitLabel={submitLabel}
           onCancel={closeDrawer}
-          inDrawer
         />
       </Drawer>
     </OpenDrawerContext.Provider>

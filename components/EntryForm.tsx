@@ -1,7 +1,6 @@
 "use client";
 
 import { useActionState, useEffect, useId, useRef, useState } from "react";
-import Link from "next/link";
 import Photo from "@/components/Photo";
 import { ACCEPTED_IMAGE_TYPES, MAX_IMAGES_PER_ENTRY } from "@/lib/attachments";
 import { shrinkImage } from "@/lib/shrink-image";
@@ -17,23 +16,17 @@ type Props = {
   // Images the entry already has (edit only).
   existingImages?: ExistingImage[];
   submitLabel: string;
-  cancelHref?: string; // where the Cancel link goes (default: the timeline)
-  // If given, Cancel calls this instead of going to cancelHref (used by the slide-in drawer).
-  onCancel?: () => void;
-  // Lay out for the slide-in drawer: fields scroll, buttons stay fixed at the bottom.
-  inDrawer?: boolean;
+  onCancel: () => void; // closes the drawer
 };
 
-// Used by both "New entry" and "Edit entry".
+// Used by both "New entry" and "Edit entry", inside the slide-in drawer.
 // Fields are controlled (kept in state) so nothing is lost if the server sends back an error.
 export default function EntryForm({
   action,
   initial,
   existingImages = [],
   submitLabel,
-  cancelHref = "/dashboard",
   onCancel,
-  inDrawer = false,
 }: Props) {
   const [state, formAction, pending] = useActionState(action, undefined);
   const id = useId(); // keeps field ids unique when two entry forms are on the page
@@ -107,11 +100,9 @@ export default function EntryForm({
   );
 
   return (
-    <form action={submit} className={inDrawer ? "flex min-h-0 flex-1 flex-col" : "space-y-5"}>
-      {/* In the drawer only the fields scroll; the buttons below stay fixed in view. */}
-      <div className={inDrawer ? "flex-1 space-y-5 overflow-y-auto p-4" : "space-y-5"}>
-        {!inDrawer && errorMessage}
-
+    <form action={submit} className="flex min-h-0 flex-1 flex-col">
+      {/* Only the fields scroll; the buttons below stay fixed in view. */}
+      <div className="flex-1 space-y-5 overflow-y-auto p-4">
         <div>
           <label htmlFor={`${id}-date`} className="label">Date</label>
           <input
@@ -229,14 +220,10 @@ export default function EntryForm({
         </div>
       </div>
 
-      <div className={inDrawer ? "space-y-3 border-t border-slate-200 bg-white p-4" : undefined}>
-        {inDrawer && errorMessage}
-        <div className={inDrawer ? "flex justify-end gap-3" : "flex flex-col-reverse gap-3 sm:flex-row sm:justify-end"}>
-          {onCancel ? (
-            <button type="button" onClick={onCancel} className="btn-secondary">Cancel</button>
-          ) : (
-            <Link href={cancelHref} className="btn-secondary">Cancel</Link>
-          )}
+      <div className="space-y-3 border-t border-slate-200 bg-white p-4">
+        {errorMessage}
+        <div className="flex justify-end gap-3">
+          <button type="button" onClick={onCancel} className="btn-secondary">Cancel</button>
           <button type="submit" disabled={pending} className="btn-primary">
             {pending ? "Saving…" : submitLabel}
           </button>

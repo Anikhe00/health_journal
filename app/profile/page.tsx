@@ -1,10 +1,11 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { requireUserId } from "@/lib/auth";
 import { formatLongDate, todayInputValue, toInputValue } from "@/lib/dates";
 import DrawerButton from "@/components/DrawerButton";
 import SignOutButton from "@/components/SignOutButton";
-import { ChevronRight, PencilIcon, TrashIcon, rowClass } from "@/components/ListRows";
+import { ArchiveIcon, ChevronRight, PencilIcon, PrinterIcon, ShareIcon, TrashIcon, rowClass } from "@/components/ListRows";
 import ProfileForm from "@/app/profile/ProfileForm";
 import DeleteAccountForm from "@/app/profile/DeleteAccountForm";
 
@@ -36,6 +37,25 @@ export default async function ProfilePage() {
         <Detail label="Genotype" value={user.genotype} />
         <Detail label="Emergency contact" value={contact} />
       </dl>
+
+      <div className="card divide-y divide-slate-100 overflow-hidden p-0!">
+        <Link href="/share" className={rowClass}>
+          <ShareIcon />
+          <span className="flex-1">Share with a clinician</span>
+          <ChevronRight />
+        </Link>
+        <Link href="/journal/print" className={rowClass}>
+          <PrinterIcon />
+          <span className="flex-1">Print or save as PDF</span>
+          <ChevronRight />
+        </Link>
+        {/* A plain link, not a Next.js one: this starts a file download. */}
+        <a href="/api/export" download className={rowClass}>
+          <ArchiveIcon />
+          <span className="flex-1">Download everything (ZIP)</span>
+          <ChevronRight />
+        </a>
+      </div>
 
       <div className="card divide-y divide-slate-100 overflow-hidden p-0!">
         <DrawerButton

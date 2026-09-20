@@ -75,6 +75,11 @@ body {
     display: none !important;
   }
 
+  /* the slide-in drawers sit on <body>, off-screen */
+  body > .fixed {
+    display: none !important;
+  }
+
   body {
     background: white !important;
   }

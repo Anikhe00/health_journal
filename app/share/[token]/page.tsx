@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { calculateAge } from "@/lib/passport";
 import { formatDateTime, formatLongDate, toInputValue } from "@/lib/dates";
 import { findActiveShare } from "@/lib/share";
+import { getTimeZone } from "@/lib/timezone";
 import { parseTags } from "@/lib/tags";
 import Markdown from "@/components/Markdown";
 import Photo from "@/components/Photo";
@@ -54,7 +55,7 @@ export default async function SharedJournalPage({ params }: PageProps<"/share/[t
       </div>
 
       <p className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-600">
-        The patient chose to share these {entries.length === 1 ? "entry" : `${entries.length} entries`} with you. This link works until {formatDateTime(share.expiresAt)}.
+        The patient chose to share these {entries.length === 1 ? "entry" : `${entries.length} entries`} with you. This link works until {formatDateTime(share.expiresAt, await getTimeZone())}.
         It is the patient&apos;s own journal, not an official medical record.
       </p>
 

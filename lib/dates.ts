@@ -1,16 +1,14 @@
 // Entry dates are calendar dates (no time of day). We store them as UTC midnight
 // and always format them in UTC so they never shift by a day between timezones.
 
-// The app is aimed at Nigeria, so "today" is today in Lagos regardless of server timezone.
-export function todayInputValue(): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Lagos" }).format(new Date()); // YYYY-MM-DD
+// Today's date where the person is (see lib/timezone.ts for how their timezone is known), as YYYY-MM-DD.
+export function todayInputValue(timeZone: string): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone }).format(new Date());
 }
 
-// "Good morning" / "Good afternoon" / "Good evening", by the hour in Lagos.
-export function greetingForNow(): string {
-  const hour = Number(
-    new Intl.DateTimeFormat("en-GB", { hour: "numeric", hourCycle: "h23", timeZone: "Africa/Lagos" }).format(new Date()),
-  );
+// "Good morning" / "Good afternoon" / "Good evening", by the hour where the person is.
+export function greetingForNow(timeZone: string): string {
+  const hour = Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hourCycle: "h23", timeZone }).format(new Date()));
   if (hour < 12) return "Good morning";
   if (hour < 17) return "Good afternoon";
   return "Good evening";
@@ -39,7 +37,7 @@ export function formatLongDate(date: Date): string {
   });
 }
 
-// "27 Sep, 10:30"
-export function formatDateTime(date: Date, timeZone = "Africa/Lagos"): string {
-  return date.toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone });
+// "27 Sep, 10:30 GMT+1". The timezone name is included so nobody has to guess.
+export function formatDateTime(date: Date, timeZone: string): string {
+  return date.toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone, timeZoneName: "short" });
 }

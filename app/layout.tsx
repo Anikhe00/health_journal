@@ -4,9 +4,11 @@ import { getServerSession } from "next-auth";
 import "./globals.css";
 import { authOptions } from "@/lib/auth";
 import { todayInputValue } from "@/lib/dates";
+import { getTimeZone } from "@/lib/timezone";
 import { createEntry } from "@/app/entries/actions";
 import Header from "@/components/Header";
 import BottomNav from "@/components/BottomNav";
+import TimezoneCookie from "@/components/TimezoneCookie";
 import { EntryDrawerProvider } from "@/components/EntryDrawer";
 import DisclaimerFooter from "@/components/DisclaimerFooter";
 
@@ -22,6 +24,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const session = await getServerSession(authOptions);
+  const timeZone = await getTimeZone();
 
   // The header and footer stay in place; only the middle scrolls (#app-scroll).
   // #app-shell is everything the entry drawer covers: it is made inert while the drawer is open.
@@ -44,7 +47,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <EntryDrawerProvider
             title="New entry"
             action={createEntry}
-            initial={{ date: todayInputValue(), title: "", body: "", tags: [] }}
+            initial={{ date: todayInputValue(timeZone), title: "", body: "", tags: [] }}
             submitLabel="Save entry"
           >
             {appShell}
@@ -52,6 +55,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         ) : (
           appShell
         )}
+        <TimezoneCookie />
       </body>
     </html>
   );

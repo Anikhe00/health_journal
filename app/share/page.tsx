@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { requireUserId } from "@/lib/auth";
+import { getTimeZone } from "@/lib/timezone";
 import { formatDateTime, formatLongDate } from "@/lib/dates";
 import { shareStatus } from "@/lib/share-options";
 import { parseTags } from "@/lib/tags";
@@ -9,6 +10,7 @@ import ShareForm from "@/app/share/ShareForm";
 
 export default async function SharePage() {
   const userId = await requireUserId();
+  const timeZone = await getTimeZone();
 
   const [shares, entries] = await Promise.all([
     prisma.share.findMany({
@@ -55,7 +57,7 @@ export default async function SharePage() {
           <ul className="space-y-3">
             {active.map((share) => (
               <li key={share.id} className="card space-y-3">
-                <ShareSummary share={share} />
+                <ShareSummary share={share} timeZone={timeZone} />
                 <form action={revokeShare.bind(null, share.id)}>
                   <button type="submit" className="btn-danger">Turn off this link</button>
                 </form>
@@ -71,7 +73,7 @@ export default async function SharePage() {
           <ul className="space-y-3">
             {past.map((share) => (
               <li key={share.id} className="card space-y-1 opacity-70">
-                <ShareSummary share={share} />
+                <ShareSummary share={share} timeZone={timeZone} />
               </li>
             ))}
           </ul>
@@ -83,7 +85,9 @@ export default async function SharePage() {
 
 function ShareSummary({
   share,
+  timeZone,
 }: {
+  timeZone: string;
   share: { label: string | null; expiresAt: Date; revokedAt: Date | null; viewCount: number; lastViewedAt: Date | null; _count: { entries: number } };
 }) {
   const status = shareStatus(share);
@@ -93,12 +97,12 @@ function ShareSummary({
     <div className="space-y-0.5 text-sm">
       <p className="text-base font-semibold text-slate-900">{share.label ?? "Link with no name"}</p>
       <p className="text-slate-600">
-        {entries} · {status === "off" ? "Turned off" : status === "expired" ? `Expired ${formatDateTime(share.expiresAt)}` : `Works until ${formatDateTime(share.expiresAt)}`}
+        {entries} · {status === "off" ? "Turned off" : status === "expired" ? `Expired ${formatDateTime(share.expiresAt, timeZone)}` : `Works until ${formatDateTime(share.expiresAt, timeZone)}`}
       </p>
       <p className="text-slate-500">
         {share.viewCount === 0
           ? "Not opened yet"
-          : `Opened ${share.viewCount} ${share.viewCount === 1 ? "time" : "times"}${share.lastViewedAt ? `, last on ${formatDateTime(share.lastViewedAt)}` : ""}`}
+          : `Opened ${share.viewCount} ${share.viewCount === 1 ? "time" : "times"}${share.lastViewedAt ? `, last on ${formatDateTime(share.lastViewedAt, timeZone)}` : ""}`}
       </p>
     </div>
   );

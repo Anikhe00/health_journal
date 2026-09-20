@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { requireUserId } from "@/lib/auth";
+import { getTimeZone } from "@/lib/timezone";
 import { formatLongDate, greetingForNow, toInputValue } from "@/lib/dates";
 import { TAGS, isTag, parseTags } from "@/lib/tags";
 import { plainPreview } from "@/lib/text";
@@ -26,6 +27,7 @@ function timelineHref(tag: string, q: string): string {
 
 export default async function DashboardPage({ searchParams }: PageProps<"/dashboard">) {
   const userId = await requireUserId();
+  const timeZone = await getTimeZone();
   const params = await searchParams;
   const q = firstValue(params.q).trim();
   const tagParam = firstValue(params.tag);
@@ -62,7 +64,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
       <div className="shrink-0 space-y-4 sm:space-y-5">
         <div className="space-y-1">
           <h1 className="min-w-0 text-xl font-bold text-slate-900 sm:text-2xl">
-            {greetingForNow()}
+            {greetingForNow(timeZone)}
             {firstName && `, ${firstName}`}
           </h1>
           <p className="text-sm text-slate-600 sm:text-base">

@@ -3,6 +3,7 @@ import QRCode from "qrcode";
 import { prisma } from "@/lib/db";
 import { publicOrigin } from "@/lib/app-url";
 import { requireUserId } from "@/lib/auth";
+import { getTimeZone } from "@/lib/timezone";
 import { todayInputValue, toInputValue } from "@/lib/dates";
 import { parseTags, type Tag } from "@/lib/tags";
 import { buildScanUrl, type PassportData } from "@/lib/passport";
@@ -66,7 +67,7 @@ export default async function PassportPage() {
   // are the same details as on the profile, so changing them here changes them there too.)
   const editor = (
     <PassportForm
-      today={todayInputValue()}
+      today={todayInputValue(await getTimeZone())}
       initial={{
         sex: passport?.sex ?? "",
         dateOfBirth: user.dateOfBirth ? toInputValue(user.dateOfBirth) : "",

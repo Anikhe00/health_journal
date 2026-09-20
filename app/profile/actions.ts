@@ -4,7 +4,9 @@ import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireUserId } from "@/lib/auth";
+import { todayInputValue } from "@/lib/dates";
 import { readHealthFields } from "@/lib/health-fields";
+import { getTimeZone } from "@/lib/timezone";
 import { deleteStoredFiles } from "@/lib/storage";
 
 export type ProfileFormState = { error?: string; saved?: boolean } | undefined;
@@ -15,7 +17,7 @@ export async function updateProfile(_prev: ProfileFormState, formData: FormData)
   const name = String(formData.get("name") ?? "").trim();
   if (!name) return { error: "Please enter your name." };
 
-  const health = readHealthFields(formData);
+  const health = readHealthFields(formData, todayInputValue(await getTimeZone()));
   if ("error" in health) return { error: health.error };
 
   await prisma.user.update({ where: { id: userId }, data: { name, ...health.data } });

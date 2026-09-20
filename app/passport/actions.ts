@@ -3,7 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireUserId } from "@/lib/auth";
+import { todayInputValue } from "@/lib/dates";
 import { readHealthFields } from "@/lib/health-fields";
+import { getTimeZone } from "@/lib/timezone";
 import { MAX_PASSPORT_TEXT, SEXES } from "@/lib/passport";
 
 export type PassportFormState = { error?: string; saved?: boolean } | undefined;
@@ -25,7 +27,7 @@ export async function savePassport(_prev: PassportFormState, formData: FormData)
 
   // Date of birth, blood group, genotype and emergency contact are the same details as on the profile,
   // so they are saved there, in the same step as the passport details.
-  const health = readHealthFields(formData);
+  const health = readHealthFields(formData, todayInputValue(await getTimeZone()));
   if ("error" in health) return { error: health.error };
   if (!health.data.dateOfBirth) return { error: "Please enter your date of birth." };
 

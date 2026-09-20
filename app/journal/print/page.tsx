@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requireUserId } from "@/lib/auth";
-import { formatLongDate, toInputValue } from "@/lib/dates";
+import { getTimeZone } from "@/lib/timezone";
+import { formatLongDate, todayInputValue, toInputValue } from "@/lib/dates";
 import { calculateAge } from "@/lib/passport";
 import { parseTags } from "@/lib/tags";
 import Markdown from "@/components/Markdown";
@@ -12,6 +13,7 @@ import PrintButton from "@/app/journal/print/PrintButton";
 // The whole journal laid out to print, or to save as a PDF from the print box.
 export default async function PrintJournalPage() {
   const userId = await requireUserId();
+  const timeZone = await getTimeZone();
 
   const [user, passport, entries] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId } }),
@@ -56,7 +58,7 @@ export default async function PrintJournalPage() {
         <h2 className="text-2xl font-bold text-slate-900">{user.name}</h2>
         {facts.length > 0 && <p className="text-sm text-slate-700">{facts.join(" · ")}</p>}
         <p className="text-xs text-slate-500">
-          Printed on {formatLongDate(new Date())}. This is the patient&apos;s own journal, not an official medical record.
+          Printed on {formatLongDate(new Date(`${todayInputValue(timeZone)}T00:00:00Z`))}. This is the patient&apos;s own journal, not an official medical record.
         </p>
       </header>
 

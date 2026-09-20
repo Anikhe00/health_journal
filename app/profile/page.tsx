@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { requireUserId } from "@/lib/auth";
+import { getTimeZone } from "@/lib/timezone";
 import { formatLongDate, todayInputValue, toInputValue } from "@/lib/dates";
 import DrawerButton from "@/components/DrawerButton";
 import SignOutButton from "@/components/SignOutButton";
@@ -71,7 +72,7 @@ export default async function ProfilePage() {
           }
         >
           <ProfileForm
-            today={todayInputValue()}
+            today={todayInputValue(await getTimeZone())}
             initial={{
               name: user.name,
               dateOfBirth: user.dateOfBirth ? toInputValue(user.dateOfBirth) : "",

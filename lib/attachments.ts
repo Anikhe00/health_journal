@@ -1,6 +1,7 @@
 // Rules for supporting images. Shared by the form (browser) and the server actions.
 export const MAX_IMAGES_PER_ENTRY = 5;
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5 MB each
+// All the photos added in one save together. Web hosts cap a request at about 4.5 MB, so stay just under it.
+export const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
 export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 // Work out what a file really is from its first bytes, not from the name or type the

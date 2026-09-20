@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 import { requireUserId } from "@/lib/auth";
 import { parseDateInput } from "@/lib/dates";
 import { serializeTags } from "@/lib/tags";
-import { MAX_IMAGES_PER_ENTRY, MAX_IMAGE_BYTES, sniffImageType } from "@/lib/attachments";
+import { MAX_IMAGES_PER_ENTRY, MAX_UPLOAD_BYTES, sniffImageType } from "@/lib/attachments";
 import { deleteStoredFiles, saveFile } from "@/lib/storage";
 
 export type EntryFormState = { error?: string } | undefined;
@@ -35,11 +35,12 @@ async function readImages(formData: FormData, keptCount: number) {
     return { error: `You can add up to ${MAX_IMAGES_PER_ENTRY} images to one entry.` };
   }
 
+  if (files.reduce((total, file) => total + file.size, 0) > MAX_UPLOAD_BYTES) {
+    return { error: "Photos can be up to 4 MB in total each time you save. Try fewer or smaller photos." };
+  }
+
   const images: NewImage[] = [];
   for (const file of files) {
-    if (file.size > MAX_IMAGE_BYTES) {
-      return { error: `"${file.name}" is too large. Each image can be up to 5 MB.` };
-    }
     const data = Buffer.from(await file.arrayBuffer());
     const mimeType = sniffImageType(data);
     if (!mimeType) return { error: `"${file.name}" isn't a JPG, PNG or WebP image.` };

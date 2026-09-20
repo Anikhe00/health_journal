@@ -1,8 +1,8 @@
 // Runs in the browser. Phone photos are often 3-8 MB, which is slow and costly on mobile data,
-// so shrink them (longest side 2000px, JPEG) before upload. That is still sharp enough to read
+// so shrink them (longest side 1600px, JPEG) before upload. That is still sharp enough to read
 // a lab result or prescription. If anything goes wrong, the original file is used as it is.
-const MAX_SIDE = 2000;
-const QUALITY = 0.85;
+const MAX_SIDE = 1600;
+const QUALITY = 0.8;
 
 export async function shrinkImage(file: File): Promise<File> {
   try {

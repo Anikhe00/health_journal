@@ -1,13 +1,13 @@
-// PatientLog data model.
-// SQLite for local dev. To move to Postgres later, change `provider` and DATABASE_URL.
+// PatientLog data model. PostgreSQL everywhere: on your computer (npm run db:start) and online.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // a direct (not pooled) connection, used by migrations
 }
 
 model User {
@@ -41,9 +41,7 @@ model Entry {
   title  String
   body   String
 
-  // Comma-separated tag names, e.g. "Diagnosis,Lab Result".
-  // SQLite has no list type; the allowed values live in lib/tags.ts.
-  // Postgres could use a String[] later.
+  // Comma-separated tag names, e.g. "Diagnosis,Lab Result". The allowed values live in lib/tags.ts.
   tags String @default("")
 
   // Reserved for the future "share with clinician" feature. Not used by any UI yet.

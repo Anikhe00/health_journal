@@ -33,7 +33,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
 
   const where: Prisma.EntryWhereInput = { userId };
   if (tag) where.tags = { contains: tag };
-  if (q) where.OR = [{ title: { contains: q } }, { body: { contains: q } }];
+  if (q) where.OR = [{ title: { contains: q, mode: "insensitive" } }, { body: { contains: q, mode: "insensitive" } }]; // ignore capital letters
 
   const [user, entries, totalCount] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId }, select: { name: true } }),

@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useId, useRef, useState } from "react";
 import Photo from "@/components/Photo";
-import { ACCEPTED_IMAGE_TYPES, MAX_IMAGES_PER_ENTRY } from "@/lib/attachments";
+import { ACCEPTED_IMAGE_TYPES, MAX_IMAGES_PER_ENTRY, MAX_UPLOAD_BYTES } from "@/lib/attachments";
 import { shrinkImage } from "@/lib/shrink-image";
 import { TAGS, type Tag } from "@/lib/tags";
 import type { EntryFormState } from "@/app/entries/actions";
@@ -65,8 +65,18 @@ export default function EntryForm({
     if (supported.length < chosen.length) setImageError("Only JPG, PNG or WebP photos can be added.");
     else if (accepted.length < supported.length) setImageError(`You can add up to ${MAX_IMAGES_PER_ENTRY} images to one entry.`);
 
-    const shrunk = await Promise.all(accepted.map(shrinkImage));
-    const added = shrunk.map((file, index) => {
+    // All the photos in one save must fit under the upload limit (checked again on the server).
+    let total = newImages.reduce((sum, image) => sum + image.file.size, 0);
+    const fits: File[] = [];
+    for (const file of await Promise.all(accepted.map(shrinkImage))) {
+      if (total + file.size > MAX_UPLOAD_BYTES) {
+        setImageError("That is more than 4 MB of photos for one save. Try fewer or smaller photos.");
+        continue;
+      }
+      total += file.size;
+      fits.push(file);
+    }
+    const added = fits.map((file, index) => {
       const url = URL.createObjectURL(file);
       previewUrls.current.push(url);
       return { key: `${Date.now()}-${index}-${file.name}`, file, url };
@@ -179,7 +189,7 @@ export default function EntryForm({
         <div>
           <p className="label">Supporting images (optional)</p>
           <p className="mb-2 text-xs text-slate-500">
-            Photos of a lab result, prescription or doctor&apos;s note. Up to {MAX_IMAGES_PER_ENTRY}.
+            Photos of a lab result, prescription or doctor&apos;s note. Up to {MAX_IMAGES_PER_ENTRY}, 4 MB in total each time you save.
           </p>
           {imageError && <p className="form-error mb-2" role="alert">{imageError}</p>}
 

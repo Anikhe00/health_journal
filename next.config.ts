@@ -15,10 +15,9 @@ const nextConfig: NextConfig = {
     ];
   },
   experimental: {
-    // Entries can carry up to 5 photos of 5 MB each (see lib/attachments.ts).
-    // The browser shrinks photos before upload, so real requests are much smaller.
-    serverActions: { bodySizeLimit: "30mb" },
-    proxyClientMaxBodySize: "30mb",
+    // Photos added in one save total at most 4 MB (see lib/attachments.ts); web hosts cap requests at about 4.5 MB.
+    serverActions: { bodySizeLimit: "5mb" },
+    proxyClientMaxBodySize: "5mb",
   },
 };
 

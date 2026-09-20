@@ -1,0 +1,60 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+}
+
+body {
+  background: #f8fafb;
+  color: #1e293b;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Reusable pieces so the pages stay easy to read. Text is 16px+ so phones don't zoom on focus. */
+@utility card {
+  @apply rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5;
+}
+
+@utility label {
+  @apply mb-1 block text-sm font-medium text-slate-700;
+}
+
+@utility input {
+  @apply min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3.5 py-[9px] text-base sm:py-3 text-slate-900 placeholder:text-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/25;
+}
+
+@utility btn {
+  @apply inline-flex min-h-10 items-center justify-center rounded-xl px-5 py-1.5 text-base font-semibold sm:min-h-12 sm:py-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600/40 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@utility btn-primary {
+  @apply btn bg-teal-700 text-white hover:bg-teal-800;
+}
+
+@utility btn-secondary {
+  @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50;
+}
+
+@utility btn-danger {
+  @apply btn border border-red-200 bg-white text-red-700 hover:bg-red-50;
+}
+
+@utility form-error {
+  @apply rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-800;
+}
+
+@utility form-success {
+  @apply rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-2.5 text-sm text-emerald-800;
+}
+
+/* Hide the scrollbar but keep the element scrollable (wheel, touch, keyboard). */
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

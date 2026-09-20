@@ -1,0 +1,91 @@
+// PatientLog data model.
+// SQLite for local dev. To move to Postgres later, change `provider` and DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  dateOfBirth  DateTime? @map("date_of_birth")
+  bloodGroup   String?   @map("blood_group")
+  genotype     String? // AA, AS, SS, AC or SC
+
+  // Profile extras (all optional)
+  emergencyContactName  String? @map("emergency_contact_name")
+  emergencyContactPhone String? @map("emergency_contact_phone")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  entries   Entry[]
+  passport  Passport?
+
+  @@map("users")
+}
+
+model Entry {
+  id     String   @id @default(cuid())
+  userId String   @map("user_id")
+  date   DateTime
+  title  String
+  body   String
+
+  // Comma-separated tag names, e.g. "Diagnosis,Lab Result".
+  // SQLite has no list type; the allowed values live in lib/tags.ts.
+  // Postgres could use a String[] later.
+  tags String @default("")
+
+  // Reserved for the future "share with clinician" feature. Not used by any UI yet.
+  // A later EntryShare table (entry_id, clinician_id, expires_at) can build on this
+  // without changing the Entry table.
+  shared Boolean @default(false)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
+
+  @@index([userId, date])
+  @@map("entries")
+}
+
+// A supporting image (photo of a lab result, prescription, ...) attached to an entry.
+// The file itself lives on disk (see lib/storage.ts); only its details are stored here.
+model Attachment {
+  id        String   @id @default(cuid())
+  entryId   String   @map("entry_id")
+  fileName  String   @map("file_name") // original name, for display
+  mimeType  String   @map("mime_type")
+  sizeBytes Int      @map("size_bytes")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  entry Entry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@index([entryId])
+  @@map("attachments")
+}
+
+// The details on the patient's emergency health passport (the card with a QR code).
+// Name, date of birth, blood group, genotype and emergency contact come from User, so they are stored once.
+model Passport {
+  id                 String   @id @default(cuid()) // printed on the card and inside the QR code
+  userId             String   @unique @map("user_id")
+  sex                String // "male" | "female" | "other"
+  allergies          String?
+  chronicConditions  String?  @map("chronic_conditions")
+  currentMedications String?  @map("current_medications")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("passports")
+}

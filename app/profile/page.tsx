@@ -46,12 +46,12 @@ export default async function ProfilePage() {
           <span className="flex-1">Share with a clinician</span>
           <ChevronRight />
         </Link>
-        <Link href="/journal/print" className={rowClass}>
+        {/* Plain links, not Next.js ones: these start file downloads. */}
+        <a href="/api/export/pdf" download className={rowClass}>
           <PrinterIcon />
-          <span className="flex-1">Print or save as PDF</span>
+          <span className="flex-1">Download as PDF</span>
           <ChevronRight />
-        </Link>
-        {/* A plain link, not a Next.js one: this starts a file download. */}
+        </a>
         <a href="/api/export" download className={rowClass}>
           <ArchiveIcon />
           <span className="flex-1">Download everything (ZIP)</span>

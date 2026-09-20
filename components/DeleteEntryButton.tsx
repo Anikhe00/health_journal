@@ -1,5 +1,7 @@
 "use client";
 
+import { TrashIcon } from "@/components/ListRows";
+
 export default function DeleteEntryButton({ action }: { action: () => Promise<void> }) {
   return (
     <form
@@ -8,7 +10,10 @@ export default function DeleteEntryButton({ action }: { action: () => Promise<vo
         if (!window.confirm("Delete this entry? This cannot be undone.")) event.preventDefault();
       }}
     >
-      <button type="submit" className="btn-danger w-full sm:w-auto">Delete entry</button>
+      <button type="submit" className="btn-danger gap-2 max-sm:size-10 max-sm:p-0" aria-label="Delete entry">
+        <TrashIcon className="size-5 shrink-0" />
+        <span className="max-sm:sr-only">Delete</span>
+      </button>
     </form>
   );
 }

@@ -58,29 +58,3 @@ body {
     display: none;
   }
 }
-
-/* Printing: hide the app's header and bars, and let the page run over as many sheets as it needs. */
-@media print {
-  html,
-  body,
-  #app-shell,
-  #app-scroll {
-    height: auto !important;
-    overflow: visible !important;
-  }
-
-  #app-shell > header,
-  #app-shell > footer,
-  #app-shell > nav {
-    display: none !important;
-  }
-
-  /* the slide-in drawers sit on <body>, off-screen */
-  body > .fixed {
-    display: none !important;
-  }
-
-  body {
-    background: white !important;
-  }
-}

@@ -25,8 +25,9 @@ export const EyeIcon = () => (
   </Svg>
 );
 
-export const PencilIcon = () => (
-  <Svg>
+// className is optional: inside a button, pass "size-5 shrink-0" so the icon takes the button's colour.
+export const PencilIcon = ({ className }: { className?: string }) => (
+  <Svg className={className}>
     <path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17v3ZM14 7l3 3" />
   </Svg>
 );
@@ -43,8 +44,8 @@ export const LogoutIcon = () => (
   </Svg>
 );
 
-export const TrashIcon = () => (
-  <Svg className="size-5 shrink-0 text-red-600">
+export const TrashIcon = ({ className = "size-5 shrink-0 text-red-600" }: { className?: string }) => (
+  <Svg className={className}>
     <path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12M10 11v5M14 11v5" />
   </Svg>
 );

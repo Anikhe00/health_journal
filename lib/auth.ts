@@ -27,22 +27,40 @@ export const authOptions: NextAuthOptions = {
         const passwordOk = await bcrypt.compare(password, user.passwordHash);
         if (!passwordOk) return null;
 
-        return { id: user.id, name: user.name, email: user.email };
+        return { id: user.id, name: user.name, email: user.email, sessionVersion: user.sessionVersion };
       },
     }),
   ],
   callbacks: {
-    // Put the user id in the token, then expose it on session.user.id.
+    // Put the user id and the session version in the token, then expose them on session.user.
     jwt({ token, user }) {
-      if (user) token.id = user.id;
+      if (user) {
+        token.id = user.id;
+        token.sv = user.sessionVersion ?? 0;
+      }
       return token;
     },
     session({ session, token }) {
-      if (session.user) session.user.id = token.id as string;
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.sv = token.sv;
+      }
       return session;
     },
   },
 };
+
+// The id of the signed-in person, or null. A login only counts if the account still exists AND the login
+// was made with the account's current session version, which is raised by "Sign out on all devices".
+// (A login from before versions existed has none, which counts as version 0.)
+export async function getCurrentUserId(): Promise<string | null> {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) return null;
+
+  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { sessionVersion: true } });
+  if (!user || (session.user.sv ?? 0) !== user.sessionVersion) return null;
+  return session.user.id;
+}
 
 // Use at the top of any protected page or server action.
 // Sends the visitor to /login if they aren't signed in, otherwise returns their user id.
@@ -50,10 +68,9 @@ export async function requireUserId(): Promise<string> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) redirect("/login");
 
-  // A login cookie can outlive the account (for example, it was deleted on another device).
+  // A login cookie can outlive its account (deleted) or be cancelled ("Sign out on all devices").
   // That route clears the stale cookie, then goes to /login.
-  const accountExists = (await prisma.user.count({ where: { id: session.user.id } })) > 0;
-  if (!accountExists) redirect("/api/session-expired");
-
-  return session.user.id;
+  const userId = await getCurrentUserId();
+  if (!userId) redirect("/api/session-expired");
+  return userId;
 }

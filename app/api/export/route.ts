@@ -1,6 +1,5 @@
-import { getServerSession } from "next-auth";
 import { Zip, ZipDeflate, ZipPassThrough, strToU8 } from "fflate";
-import { authOptions } from "@/lib/auth";
+import { getCurrentUserId } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { toInputValue } from "@/lib/dates";
 import { readStoredFile } from "@/lib/storage";
@@ -23,9 +22,8 @@ Dates are written as YYYY-MM-DD.
 // Downloads everything in the journal as one ZIP file: the entries as data, and every photo.
 // The ZIP is built piece by piece as it is sent, so a big journal doesn't have to fit in memory.
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return new Response("Please log in.", { status: 401 });
-  const userId = session.user.id;
+  const userId = await getCurrentUserId();
+  if (!userId) return new Response("Please log in.", { status: 401 });
 
   const [user, passport, entries] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId } }),

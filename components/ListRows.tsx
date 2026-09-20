@@ -69,3 +69,10 @@ export const ArchiveIcon = () => (
     <path d="M4 7h16v3H4V7ZM6 10v9h12v-9M10 14h4" />
   </Svg>
 );
+
+export const DevicesIcon = () => (
+  <Svg>
+    <rect x="3" y="5" width="13" height="10" rx="1.5" />
+    <path d="M1.5 18.5h16M18 9h2.5A1.5 1.5 0 0 1 22 10.5v8a1.5 1.5 0 0 1-1.5 1.5H18a1.5 1.5 0 0 1-1.5-1.5v-8A1.5 1.5 0 0 1 18 9Z" />
+  </Svg>
+);

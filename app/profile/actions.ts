@@ -47,3 +47,10 @@ export async function deleteAccount(_prev: DeleteAccountState, formData: FormDat
   // The browser signs out next (see DeleteAccountForm).
   return { deleted: true };
 }
+
+// Cancels every login of this account, on every device. New logins carry the new number.
+export async function signOutEverywhere() {
+  const userId = await requireUserId();
+  await prisma.user.update({ where: { id: userId }, data: { sessionVersion: { increment: 1 } } });
+  // The browser signs out next (see SignOutEverywhereButton).
+}

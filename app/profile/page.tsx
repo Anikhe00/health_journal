@@ -5,6 +5,7 @@ import { requireUserId } from "@/lib/auth";
 import { formatLongDate, todayInputValue, toInputValue } from "@/lib/dates";
 import DrawerButton from "@/components/DrawerButton";
 import SignOutButton from "@/components/SignOutButton";
+import SignOutEverywhereButton from "@/components/SignOutEverywhereButton";
 import { ArchiveIcon, ChevronRight, PencilIcon, PrinterIcon, ShareIcon, TrashIcon, rowClass } from "@/components/ListRows";
 import ProfileForm from "@/app/profile/ProfileForm";
 import DeleteAccountForm from "@/app/profile/DeleteAccountForm";
@@ -83,6 +84,7 @@ export default async function ProfilePage() {
         </DrawerButton>
 
         <SignOutButton />
+        <SignOutEverywhereButton />
 
         <DrawerButton
           title="Delete account"

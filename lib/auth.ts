@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import { prisma } from "@/lib/db";
 
 export const authOptions: NextAuthOptions = {
@@ -50,6 +51,15 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
+// The signed-in person's full row, straight from the database, or null if no one is signed in.
+// Wrapped in React's cache() so a single page load shares one query, however many places ask for it
+// (the header, a page's own requireUserId() check, and the page's own display all read the same row).
+export const getSessionUser = cache(async () => {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) return null;
+  return prisma.user.findUnique({ where: { id: session.user.id } });
+});
+
 // The id of the signed-in person, or null. A login only counts if the account still exists AND the login
 // was made with the account's current session version, which is raised by "Sign out on all devices".
 // (A login from before versions existed has none, which counts as version 0.)
@@ -57,7 +67,7 @@ export async function getCurrentUserId(): Promise<string | null> {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) return null;
 
-  const user = await prisma.user.findUnique({ where: { id: session.user.id }, select: { sessionVersion: true } });
+  const user = await getSessionUser();
   if (!user || (session.user.sv ?? 0) !== user.sessionVersion) return null;
   return session.user.id;
 }

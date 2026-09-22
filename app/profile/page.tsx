@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
-import { requireUserId } from "@/lib/auth";
+import { requireUserId, getSessionUser } from "@/lib/auth";
 import { getTimeZone } from "@/lib/timezone";
 import { formatLongDate, todayInputValue, toInputValue } from "@/lib/dates";
 import DrawerButton from "@/components/DrawerButton";
@@ -12,8 +11,8 @@ import ProfileForm from "@/app/profile/ProfileForm";
 import DeleteAccountForm from "@/app/profile/DeleteAccountForm";
 
 export default async function ProfilePage() {
-  const userId = await requireUserId();
-  const user = await prisma.user.findUnique({ where: { id: userId } });
+  await requireUserId(); // redirects if not signed in
+  const user = await getSessionUser(); // same query requireUserId() already made, reused rather than repeated
   if (!user) notFound();
 
   const initial = user.name.trim().charAt(0).toUpperCase() || "?";

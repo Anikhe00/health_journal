@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { jsPDF } from "jspdf";
-import { getCurrentUserId } from "@/lib/auth";
+import { getCurrentUserId, getSessionUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { formatLongDate, todayInputValue, toInputValue } from "@/lib/dates";
 import { calculateAge } from "@/lib/passport";
@@ -86,7 +86,7 @@ export async function GET() {
 
   const timeZone = await getTimeZone();
   const [user, passport, entries, fonts] = await Promise.all([
-    prisma.user.findUnique({ where: { id: userId } }),
+    getSessionUser(), // same query getCurrentUserId() already made, reused rather than repeated
     prisma.passport.findUnique({ where: { userId } }),
     prisma.entry.findMany({
       where: { userId },

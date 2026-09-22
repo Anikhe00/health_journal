@@ -1,5 +1,5 @@
 import { Zip, ZipDeflate, ZipPassThrough, strToU8 } from "fflate";
-import { getCurrentUserId } from "@/lib/auth";
+import { getCurrentUserId, getSessionUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { toInputValue } from "@/lib/dates";
 import { readStoredFile } from "@/lib/storage";
@@ -26,7 +26,7 @@ export async function GET() {
   if (!userId) return new Response("Please log in.", { status: 401 });
 
   const [user, passport, entries] = await Promise.all([
-    prisma.user.findUnique({ where: { id: userId } }),
+    getSessionUser(), // same query getCurrentUserId() already made, reused rather than repeated
     prisma.passport.findUnique({ where: { userId } }),
     prisma.entry.findMany({
       where: { userId },

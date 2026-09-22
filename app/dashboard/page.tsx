@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
-import { requireUserId } from "@/lib/auth";
+import { requireUserId, getSessionUser } from "@/lib/auth";
 import { getTimeZone } from "@/lib/timezone";
 import { formatLongDate, greetingForNow, toInputValue } from "@/lib/dates";
 import { TAGS, isTag, parseTags } from "@/lib/tags";
@@ -38,7 +38,7 @@ export default async function DashboardPage({ searchParams }: PageProps<"/dashbo
   if (q) where.OR = [{ title: { contains: q, mode: "insensitive" } }, { body: { contains: q, mode: "insensitive" } }]; // ignore capital letters
 
   const [user, entries, totalCount] = await Promise.all([
-    prisma.user.findUnique({ where: { id: userId }, select: { name: true } }),
+    getSessionUser(), // already fetched once by requireUserId() above; this reuses that same query
     prisma.entry.findMany({
       where,
       orderBy: [{ date: "desc" }, { createdAt: "desc" }],

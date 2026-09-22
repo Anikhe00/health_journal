@@ -1,4 +1,4 @@
-# PatientLog
+# Health Journal
 
 A simple, patient-owned health journal. Hospital records in Nigeria don't follow a patient from one hospital to another, so this app lets patients keep their own journal, which they control and can share with a clinician later.
 
@@ -22,7 +22,7 @@ npm run dev                 # http://localhost:3000 (also starts the database if
 
 Useful scripts: `npm run db:studio` (browse the data), `npm run db:reset` (wipe the local database), `npm run db:stop` (stop the local database).
 
-The local database keeps its data in `~/Library/Application Support/prisma-dev-nodejs/patientlog` (on a Mac).
+The local database keeps its data in `~/Library/Application Support/prisma-dev-nodejs/patientlog` on a Mac (the folder is still named after the project's original name, PatientLog).
 To put the app online, follow **[DEPLOY.md](DEPLOY.md)**.
 
 ## Layout

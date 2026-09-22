@@ -11,7 +11,7 @@ type Props = {
   variant: "front" | "back";
   data: PassportData;
   qrDataUrl: string;
-  verifyText: string; // e.g. "patientlog.example/scan/abc123"
+  verifyText: string; // e.g. "healthjournal.example/scan/abc123"
 };
 
 export default function PassportCard({ variant, data, qrDataUrl, verifyText }: Props) {

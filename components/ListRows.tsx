@@ -50,8 +50,8 @@ export const TrashIcon = ({ className = "size-5 shrink-0 text-red-600" }: { clas
   </Svg>
 );
 
-export const ShareIcon = () => (
-  <Svg>
+export const ShareIcon = ({ className }: { className?: string } = {}) => (
+  <Svg className={className}>
     <circle cx="6" cy="12" r="2.2" />
     <circle cx="17" cy="6" r="2.2" />
     <circle cx="17" cy="18" r="2.2" />
@@ -65,8 +65,8 @@ export const PrinterIcon = () => (
   </Svg>
 );
 
-export const ArchiveIcon = () => (
-  <Svg>
+export const ArchiveIcon = ({ className }: { className?: string } = {}) => (
+  <Svg className={className}>
     <path d="M4 7h16v3H4V7ZM6 10v9h12v-9M10 14h4" />
   </Svg>
 );

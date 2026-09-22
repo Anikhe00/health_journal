@@ -18,7 +18,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "PatientLog",
+  title: "Health Journal",
   description: "A personal health journal that you own and carry with you.",
 };
 

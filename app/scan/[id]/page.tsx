@@ -88,7 +88,7 @@ export default async function ScanPage({ params, searchParams }: PageProps<"/sca
 
       <p className="pt-2 text-center text-xs text-slate-500">
         This page shows only life-critical details the card holder chose to include. It is not a medical record.{" "}
-        <Link href="/login" className="underline">PatientLog</Link>
+        <Link href="/" className="underline">Health Journal</Link>
       </p>
     </div>
   );

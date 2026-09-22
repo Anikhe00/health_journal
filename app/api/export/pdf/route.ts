@@ -99,7 +99,7 @@ export async function GET() {
 
   const today = todayInputValue(timeZone);
   const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
-  doc.setProperties({ title: `${clean(user.name)} - health journal`, creator: "PatientLog" });
+  doc.setProperties({ title: `${clean(user.name)} - health journal`, creator: "Health Journal" });
   doc.addFileToVFS(fontFiles.normal, fonts.normal);
   doc.addFont(fontFiles.normal, "NotoSans", "normal", "Identity-H");
   doc.addFileToVFS(fontFiles.bold, fonts.bold);
@@ -285,14 +285,14 @@ export async function GET() {
   for (let page = 1; page <= pages; page++) {
     doc.setPage(page);
     style(7.5, "normal", COLOR.muted);
-    doc.text("PatientLog · personal journal, not a substitute for official medical records or emergency care", PAGE.margin, PAGE.height - 10);
+    doc.text("Health Journal · personal journal, not a substitute for official medical records or emergency care", PAGE.margin, PAGE.height - 10);
     doc.text(`Page ${page} of ${pages}`, PAGE.width - PAGE.margin, PAGE.height - 10, { align: "right" });
   }
 
   return new Response(doc.output("arraybuffer"), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="patientlog-journal-${today}.pdf"`,
+      "Content-Disposition": `attachment; filename="health-journal-${today}.pdf"`,
       "Cache-Control": "private, no-store",
     },
   });

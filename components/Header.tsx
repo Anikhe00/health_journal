@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { OpenEntryDrawerButton } from "@/components/EntryDrawer";
 import HeaderNav from "@/components/HeaderNav";
+import Logo from "@/components/Logo";
 
 export default async function Header() {
   const session = await getServerSession(authOptions);
@@ -15,8 +16,8 @@ export default async function Header() {
     <header className="shrink-0 border-b border-slate-200 bg-white">
       {/* Phones: logo on the left, avatar on the right. Tablet and up: logo, links in the middle, New entry on the right. */}
       <div className="mx-auto flex max-w-2xl items-center justify-between gap-2 px-4 py-2 sm:grid sm:grid-cols-[1fr_auto_1fr]">
-        <Link href={session ? "/dashboard" : "/login"} className="text-lg font-bold text-teal-800">
-          PatientLog
+        <Link href={session ? "/dashboard" : "/"} className="whitespace-nowrap text-lg font-bold text-teal-800">
+          <Logo markClassName="size-6" />
         </Link>
 
         {session && (

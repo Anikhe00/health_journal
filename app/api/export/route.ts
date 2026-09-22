@@ -8,8 +8,8 @@ import { parseTags } from "@/lib/tags";
 const EXTENSIONS: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
 const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "entry";
 
-const README = `Your PatientLog journal
-=======================
+const README = `Your Health Journal export
+============================
 
 journal.json   Your profile, health passport details and every journal entry.
                You can open it with any text editor.
@@ -39,7 +39,7 @@ export async function GET() {
   // Work out each photo's place in the ZIP first, so journal.json can point to it.
   const files: { id: string; path: string }[] = [];
   const journal = {
-    format: "patientlog-export",
+    format: "health-journal-export",
     version: 1,
     exportedAt: new Date().toISOString(),
     profile: {
@@ -106,7 +106,7 @@ export async function GET() {
   return new Response(stream, {
     headers: {
       "Content-Type": "application/zip",
-      "Content-Disposition": `attachment; filename="patientlog-journal-${new Date().toISOString().slice(0, 10)}.zip"`,
+      "Content-Disposition": `attachment; filename="health-journal-${new Date().toISOString().slice(0, 10)}.zip"`,
       "Cache-Control": "private, no-store",
     },
   });

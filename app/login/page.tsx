@@ -1,6 +1,5 @@
 import Link from "next/link";
 import LoginForm from "@/app/login/LoginForm";
-import Disclaimer from "@/components/Disclaimer";
 
 export default function LoginPage() {
   return (
@@ -18,8 +17,6 @@ export default function LoginPage() {
         New here?{" "}
         <Link href="/signup" className="font-semibold text-teal-700 underline">Create an account</Link>
       </p>
-
-      <Disclaimer />
     </div>
   );
 }

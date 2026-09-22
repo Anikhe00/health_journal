@@ -1,4 +1,4 @@
-# Putting PatientLog online
+# Putting Health Journal online
 
 This guide uses **Vercel** (hosting), **Neon** (PostgreSQL database) and **Cloudflare R2** (photo storage). Any
 PostgreSQL database and any S3-compatible storage works the same way: only the addresses and keys change.
@@ -46,7 +46,7 @@ app says so instead of quietly losing photos.
    | `DATABASE_URL` | the pooled Neon address from step 1 |
    | `DIRECT_URL` | the direct Neon address from step 1 |
    | `NEXTAUTH_SECRET` | a long random secret: `openssl rand -base64 32` |
-   | `NEXTAUTH_URL` | your final address, for example `https://patientlog.example.com` |
+   | `NEXTAUTH_URL` | your final address, for example `https://healthjournal.example.com` |
    | `S3_BUCKET`, `S3_REGION`, `S3_ENDPOINT`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | from step 2 |
 
 3. Deploy. Vercel runs `npm run vercel-build`, which **creates or updates the database tables** (`prisma migrate deploy`)

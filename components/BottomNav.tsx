@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { OpenEntryDrawerButton } from "@/components/EntryDrawer";
 import { PassportIcon, PlusIcon, TimelineIcon } from "@/components/NavIcons";
+import { PASSPORT_ENABLED } from "@/lib/features";
 
 // The navigation bar at the bottom of the screen on phones. Bigger screens use the header instead.
 export default function BottomNav() {
@@ -14,7 +15,7 @@ export default function BottomNav() {
 
   return (
     <nav aria-label="Main" className="shrink-0 border-t border-slate-200 bg-white sm:hidden">
-      <ul className="mx-auto grid max-w-md grid-cols-3 items-center">
+      <ul className={`mx-auto grid max-w-md items-center ${PASSPORT_ENABLED ? "grid-cols-3" : "grid-cols-2"}`}>
         <li>
           <Link
             href="/dashboard"
@@ -33,16 +34,18 @@ export default function BottomNav() {
             New entry
           </OpenEntryDrawerButton>
         </li>
-        <li>
-          <Link
-            href="/passport"
-            aria-current={pathname.startsWith("/passport") ? "page" : undefined}
-            className={tab(pathname.startsWith("/passport"))}
-          >
-            <PassportIcon />
-            Passport
-          </Link>
-        </li>
+        {PASSPORT_ENABLED && (
+          <li>
+            <Link
+              href="/passport"
+              aria-current={pathname.startsWith("/passport") ? "page" : undefined}
+              className={tab(pathname.startsWith("/passport"))}
+            >
+              <PassportIcon />
+              Passport
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   );

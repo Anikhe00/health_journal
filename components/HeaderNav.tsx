@@ -3,24 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PassportIcon, TimelineIcon, UserIcon } from "@/components/NavIcons";
+import { PASSPORT_ENABLED } from "@/lib/features";
 
 // The links in the middle of the header on tablets and desktops. On phones the bottom bar does this job.
 export default function HeaderNav() {
   const pathname = usePathname();
 
-  const items = [
+  const items: { href: string; label: string; active: boolean; icon: React.ReactNode }[] = [
     {
       href: "/dashboard",
       label: "Timeline",
       active: pathname.startsWith("/dashboard") || pathname.startsWith("/entries"),
       icon: <TimelineIcon className="size-5" />,
     },
-    {
-      href: "/passport",
-      label: "Passport",
-      active: pathname.startsWith("/passport"),
-      icon: <PassportIcon className="size-5" />,
-    },
+    ...(PASSPORT_ENABLED
+      ? [{ href: "/passport", label: "Passport", active: pathname.startsWith("/passport"), icon: <PassportIcon className="size-5" /> }]
+      : []),
     {
       href: "/profile",
       label: "Profile",

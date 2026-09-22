@@ -1,7 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import QRCode from "qrcode";
 import { prisma } from "@/lib/db";
 import { publicOrigin } from "@/lib/app-url";
+import { PASSPORT_ENABLED } from "@/lib/features";
 import { requireUserId } from "@/lib/auth";
 import { getTimeZone } from "@/lib/timezone";
 import { todayInputValue, toInputValue } from "@/lib/dates";
@@ -16,6 +17,8 @@ import { ChevronRight, PencilIcon, rowClass } from "@/components/ListRows";
 const MAX_SUGGESTIONS = 8;
 
 export default async function PassportPage() {
+  if (!PASSPORT_ENABLED) redirect("/dashboard");
+
   const userId = await requireUserId();
 
   const [user, passport, entries] = await Promise.all([

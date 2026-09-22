@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { LogoMark } from "@/components/Logo";
-import { TimelineIcon, PassportIcon } from "@/components/NavIcons";
+import { TimelineIcon } from "@/components/NavIcons";
 import { ArchiveIcon, ShareIcon } from "@/components/ListRows";
 
 // Signed-in visitors go straight to their timeline. Everyone else sees what the app is and how to start.
@@ -30,7 +30,6 @@ export default async function Home() {
 
       <div className="grid gap-3 sm:grid-cols-2">
         <Feature icon={<TimelineIcon className="size-6 text-teal-700" />} title="A simple timeline" text="Write down visits, symptoms, lab results and prescriptions as they happen, with photos of the paperwork." />
-        <Feature icon={<PassportIcon className="size-6 text-teal-700" />} title="Emergency health ID" text="A QR card with your blood group, allergies and emergency contact, for the moments you can't explain yourself." />
         <Feature icon={<ShareIcon className="size-6 text-teal-700" />} title="Share with a clinician" text="Send a private link to the entries you choose, no account needed on their end, and turn it off whenever." />
         <Feature icon={<ArchiveIcon className="size-6 text-teal-700" />} title="Always yours to keep" text="Download your whole journal as a PDF or a ZIP file at any time." />
       </div>

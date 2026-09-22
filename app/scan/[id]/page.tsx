@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { calculateAge, decodeQrPayload, formatDob, orNotProvided, saysNone, sexLabel } from "@/lib/passport";
+import { PASSPORT_ENABLED } from "@/lib/features";
 
 // Public page: opened by scanning a passport QR code. No login needed. It never touches the database:
 // everything shown comes from the address itself, which is exactly what is printed in the QR code.
@@ -9,6 +11,8 @@ export const metadata: Metadata = { title: "Emergency health passport", robots: 
 const phoneLink = (phone: string) => phone.replace(/[^\d+]/g, ""); // keep only digits and +, for tel: and sms: links
 
 export default async function ScanPage({ params, searchParams }: PageProps<"/scan/[id]">) {
+  if (!PASSPORT_ENABLED) redirect("/");
+
   const { id } = await params;
   const query = await searchParams;
   const encoded = Array.isArray(query.d) ? query.d[0] : query.d;
